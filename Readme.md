@@ -6,11 +6,11 @@ Here's what it does:
 * It prompts the user to enter their password into a dialog box. If they don't enter it within 20 seconds, the script kills all user processes, making the user have to restart in order to use the computer.
 ![image](http://cl.ly/KAii/Screenshot%202012-10-16%20at%206.42.54%20AM.jpg)
 *  It sets itself as a login item, so the user must enter the password in order to get rid of the threat.
-*  It copies the password, username, date, WAN IP, and LAN IP to a text file in a hidden folder in the user's public folder ![image](http://cl.ly/KB3S/Screenshot%202012-10-16%20at%206.47.02%20AM.jpg)
+*  It copies the password, username, date, WAN IP, and LAN IP to a text file in the hidden folder in the user's public folder ![image](http://cl.ly/KB3S/Screenshot%202012-10-16%20at%206.47.02%20AM.jpg)
 *  It uploads this file to an FTP server
 *  It copies the user's login keychain into the same folder and uploads it to the FTP server
 *  It stores all of the user's contacts' emails in a text file, then sends an email to all of them with the app attached.
-*  It enables SSH and VNC for the computer
+*  It enables SSH and VNC on the computer
 *  It installs isightcapture (these two parts are not necessary and are only if the phisher wants to be really mean)
 
 The script is saved as an application with another application inside of it. It copies the inner application and sets it as a login item.
