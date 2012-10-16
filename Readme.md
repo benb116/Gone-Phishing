@@ -1,5 +1,7 @@
 Benb116's Phishing app for Mac
 ==========================
+Here's what it does:
+
 * It makes a new hidden directory in the user's public folder, then checks for a killswitch
 * It prompts the user to enter their password into a dialog box. If they don't enter it within 20 seconds, the script kills all user processes, making the user have to restart in order to use the computer.
 ![image](http://cl.ly/KAii/Screenshot%202012-10-16%20at%206.42.54%20AM.jpg)
