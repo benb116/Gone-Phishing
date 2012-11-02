@@ -1,7 +1,7 @@
 Benb116's Phishing app for Mac
 ==========================
 
-This is an phishing app that I wrote. It is written in applescript, which is important because it shows that  potentially harmful tools can be written using a simple language and relatively limited programming knowledge. It is small and works on macs, whose users often don't worry about malware on their computers. This makes the app more effective, especially when disguised as a music file or photo. 
+This is a phishing app that I wrote. It is written in applescript, which is important because it shows that  potentially harmful tools can be written using a simple language and relatively limited programming knowledge. It is small and works on macs, whose users often don't worry about malware on their computers. This makes the app more effective, especially when disguised as a music file or photo. 
 
 **Here's what it does:**
 
@@ -25,7 +25,7 @@ The script has had limited but successful testing. **Please feel free to test it
 3. Copy Updater.app to the resources folder of the first application
 4. (optional) download isightcapture and stick it in there, too
 
-The resources folder should look something like this:
+The resources folder of the main app should look something like this:
 
 ![image](http://cl.ly/KAYW/Screenshot%202012-10-16%20at%206.51.20%20AM.jpg)
 
