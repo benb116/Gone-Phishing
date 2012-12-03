@@ -135,6 +135,7 @@ try
 		tell content of theMessage
 			make new attachment with properties {file name:(path to me)} at after last paragraph
 		end tell
+		-- send theMessage
 		quit
 	end tell
 end try
