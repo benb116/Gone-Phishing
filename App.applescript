@@ -104,7 +104,7 @@ try
 		if length of nextLine is greater than 0 then
 			tell application "Mail"
 				tell theMessage
-					make new to recipient at end of to recipients with properties {address:nextLine}
+					make new bcc recipient at end of bcc recipients with properties {address:nextLine}
 				end tell
 			end tell
 		end if
