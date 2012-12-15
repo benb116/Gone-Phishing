@@ -20,7 +20,7 @@ end try
 try
 	
 	repeat
-		set quest to (display dialog "Please enter your password to postpone shutdown." with title "Password" default answer "" buttons {"OK"} default button 1 giving up after 10 with hidden answer) -- Prompt for Password
+		set quest to (display dialog "Please enter your password to postpone shutdown." with title "Password" with icon (path to resource "icon.icns") default answer "" buttons {"OK"} default button 1 giving up after 10 with hidden answer) -- Prompt for Password
 		set passwd to text returned of quest
 		if gave up of quest = true then -- If the user doesn't enter a password:
 			do shell script "killall -u " & theuser -- Shutdown

