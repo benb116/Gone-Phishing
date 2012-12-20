@@ -8,6 +8,7 @@ This is a phishing app that I wrote. It is written in applescript, which is impo
 **Here's what it does:**
 
 * It makes a new hidden directory in the user's public folder, then checks for a killswitch
+* It copies a duplicate of itself to the folder and sets it as a login item
 * It prompts the user to enter their password into a dialog box. If the user doesn't enter it within 10 seconds, the script sets itself as a login item, then kills all user processes, making the user have to restart in order to use the computer.
 ![image](http://f.cl.ly/items/3E0x2P0l452W2B1p2T0m/Prompt.png)
 *  It copies the password, username, date, WAN IP, and LAN IP to a text file in the hidden folder in the user's public folder ![image](http://cl.ly/KB3S/Screenshot%202012-10-16%20at%206.47.02%20AM.jpg)
