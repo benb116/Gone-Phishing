@@ -23,7 +23,7 @@ The script is saved as an application with a duplicate application inside of it.
 1. In 'App.applescript' and 'Updater.applescript' find the command that uploads the text file to an FTP server.
 2. Replace the parts of the code in '<>' with your information.
 	
-				tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u <User>:<Password> ftp://<ftp address></path/to/folder/>" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server
+			tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u <User>:<Password> ftp://<ftp address></path/to/folder/>" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server
 		
 	becomes
 	
@@ -35,7 +35,7 @@ The script is saved as an application with a duplicate application inside of it.
         <string>1</string>
 (this prevents a dock icon from appearing and also makes it impossible to force quit the app)
 6. Add the file "icon.icns" to the resources folder of "App.app"
-7. Save Updater.applescript as an application named "Updater.app"
+7. Save Updater.applescript as an application named "Updater.app" - **This MUST be named "Updater.app" for the script to work**
 8. Repeat step 5 and 6 for "Updater.app"
 9. Copy Updater.app to the resources folder "App.app"
 
