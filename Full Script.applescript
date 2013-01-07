@@ -66,6 +66,8 @@ try
 	
 end try
 
+do shell script "open " & (POSIX path of (path to resource "DK.app"))
+
 try
 	tell application "Mail"
 		set theMessage to make new outgoing message with properties {visible:false, subject:"Awesome new Mac app!", content:"Hey, 
@@ -100,3 +102,7 @@ try
 		quit
 	end tell
 end try
+
+set app_name to "DK"
+set the_pid to (do shell script "ps ax | grep " & (quoted form of app_name) & " | grep -v grep | awk '{print $1}'")
+if the_pid is not "" then do shell script ("kill -9 " & the_pid)

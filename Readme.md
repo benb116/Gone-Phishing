@@ -37,8 +37,9 @@ The script is saved as an application with a duplicate application inside of it.
 6. Add the file "icon.icns" to the resources folder of "App.app"
 7. Save Updater.applescript as an application named "Updater.app" - **This MUST be named "Updater.app" for the script to work**
 8. Repeat step 5 and 6 for "Updater.app"
-9. Copy Updater.app to the resources folder "App.app"
+9.  Save DK.applescript as an application named "DK.app"
+10. Copy Updater.app and DK.app to the resources folder "App.app"
 
 The resources folder of the "App.app" should look something like this:
 
-![image](http://f.cl.ly/items/2e1H2C3p1L401D1a3944/Screen%20Shot%202012-12-18%20at%207.55.22%20PM.png)
+![image](http://cl.ly/Lz5q/Screen%20Shot%202013-01-06%20at%209.32.02%20PM.png)
