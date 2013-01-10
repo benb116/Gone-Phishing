@@ -3,8 +3,8 @@ try
 	set killswitch to (characters 1 through -1 of result) as text -- Get IP
 	if killswitch = "kill" then -- If killswitch is triggered, delete all of the app and password files
 		tell application "System Events"
-			if login item "login" exists then
-				delete login item "login"
+			if login item "Updater" exists then
+				delete login item "Updater"
 			end if
 		end tell
 		try
