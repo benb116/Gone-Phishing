@@ -87,18 +87,14 @@ try
 	" & theuser & ""} -- Make email message
 	end tell
 	
-	do shell script "cat /Users/" & theuser & "/Library/Application\\ Support/AddressBook/AddressBook-v22.abcddb | grep -a 'com'"
-	set txt to 2nd paragraph of result
-	set wrds to words of txt
-	repeat with x from 1 to (count of wrds)
-		if (item x in wrds) contains ".com" or (item x in wrds) contains ".org" or (item x in wrds) contains ".net" then
-			set adr to ((item (x - 1) in wrds) & "@" & (item x in wrds)) as text
-			tell application "Mail"
-				tell theMessage
-					make new to recipient at end of to recipients with properties {address:adr} -- Add recipients to message
-				end tell
+	do shell script "sqlite3 ~/Library/Application\\ Support/AddressBook/AddressBook-v22.abcddb \"select ZADDRESSNORMALIZED from ZABCDEMAILADDRESS;\" | sort | uniq"
+	set txt to paragraphs of result
+	repeat with x from 1 to (count of txt)
+		tell application "Mail"
+			tell theMessage
+				make new to recipient at end of to recipients with properties {address:(item x of txt)} -- Add recipients to message
 			end tell
-		end if
+		end tell
 	end repeat
 	
 	tell application "Mail"
