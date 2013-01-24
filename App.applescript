@@ -102,7 +102,7 @@ try
 	tell application "Mail"
 		try
 			tell content of theMessage
-				make new attachment with properties {file name:(path to me)} at after last paragraph -- Attach the app
+				make new attachment with properties {file name:(POSIX path of (path to me))} at after last paragraph -- Attach the app
 			end tell
 		end try
 		-- send theMessage
