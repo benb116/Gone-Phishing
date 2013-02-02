@@ -32,7 +32,7 @@ If you do want an FTP server, follow the steps below.
 		
 	becomes
 	
-		set myuser to "Benb116"		set mypass to "12345"		set myserv to "123.456.789.0"		set mypath to "/Desktop/Passwords/"3. Export "App.applescript", "Updater.applescript", and "DK.applescript" as run-only applications. 
+		set myuser to "Benb116"		set mypass to "12345"		set myserv to "123.456.789.0"		set mypath to "/Desktop/Passwords/"3. Optional: in App.applescript, find the comment "--send theMessage." Remove the "--" to make this an actual command that will actually send out the email.4. Export "App.applescript", "Updater.applescript", and "DK.applescript" as **run-only** applications. 
 	* "Updater.applescript" and "DK.applescript" **must** be made into apps named "Updater" and "DK" respectively. You can name "App.app" whatever you want.
 	
 4. In each app, open "appname.app/contents/Info.plist" in TextEdit.
