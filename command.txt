@@ -1,1 +1,8 @@
-shell:say hellos
+Possible commands:
+kill
+hold
+
+Commands that can be combined
+shell:say hello
+encpass:pass
+mail:false

